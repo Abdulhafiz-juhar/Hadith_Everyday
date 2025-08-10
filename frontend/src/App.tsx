@@ -1,15 +1,38 @@
-import './App.css'
-import { Button } from './components/ui/button'
-
+import "./App.css";
+import { Routes, Route } from "react-router";
+import DailyHadithPage from "./pages/DailyHadithPage";
+import FavoritesPage from "./pages/FavoritesPage";
+import Navbar from "./components/Navbar";
+import { getRandomHadith } from "@/api/hadithApi";
+import { useState, useEffect } from "react";
 
 function App() {
+  const [Hadith, setHadith] = useState({
+    hadith: "",
+    source: "",
+  });
+  useEffect(() => {
+    getRandomHadith().then((response) => {
+      setHadith(response);
+    });
+  }, []);
 
   return (
-    <>
-      <h1 className="bg-red-600">Hi</h1>
-      <Button>Shadcn</Button>
-    </>
-  )
+    <div className="flex flex-col min-h-screen bg-gray-100">
+      <Navbar />
+      <main className="p-4 border border-8 flex flex-col flex-1 items-center justify-center">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <DailyHadithPage hadith={Hadith.hadith} source={Hadith.source} />
+            }
+          />
+          <Route path="/Favorites" element={<FavoritesPage />} />
+        </Routes>
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;
