@@ -14,9 +14,13 @@ export default function DailyHadithPage({
     <div className="border-2 rounded-2xl border-black p-4 grid gap-3 w-2/3">
       <h1>{hadith}</h1>
       <h3>{source}</h3>
-      <Link to="/Favorites">
+      {/* <Link to="/Favorites">
         <Button>goto Favorites</Button>
-      </Link>
+      </Link> */}
+      <div className="buttons flex gap-1 justify-center">
+        <Button>Refresh</Button>
+        <Button>Add to Favorite</Button>
+      </div>
     </div>
   );
 }
