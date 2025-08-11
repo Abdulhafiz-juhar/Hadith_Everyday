@@ -27,7 +27,7 @@ export default function DailyHadithPage() {
   //     queryFn: getRandomHadith,
   //   });
   return (
-    <div className="border-2 rounded-2xl border-black p-4 grid gap-3 w-2/3">
+    <div className="border-2 rounded-2xl border-black p-4 grid gap-3 w-full max-w-[800px]">
       {isError && <h1>Error loading hadith.</h1>}
       {isFetching ? (
         <Spinner />
