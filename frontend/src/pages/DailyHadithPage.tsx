@@ -27,19 +27,22 @@ export default function DailyHadithPage() {
   //     queryFn: getRandomHadith,
   //   });
   return (
-    <div className="border-2 rounded-2xl border-black p-4 grid gap-3 w-full max-w-[800px]">
-      {isError && <h1>Error loading hadith.</h1>}
-      {isFetching ? (
-        <Spinner />
-      ) : (
-        <>
-          <h1>{data?.hadith}</h1>
-          <h3>{data?.source}</h3>
-        </>
-      )}
-      <div className="buttons flex gap-1 justify-center">
-        <Button onClick={handleRefresh}>Refresh</Button>
-        <Button>Add to Favorite</Button>
+    <div>
+      <h1 className="text-5xl">Home</h1>
+      <div className="border-2 rounded-2xl border-black p-4 grid gap-3 w-full max-w-[800px] place-self-center">
+        {isError && <h1>Error loading hadith.</h1>}
+        {isFetching ? (
+          <Spinner />
+        ) : (
+          <>
+            <h1 className="line-clamp">{data?.hadith}</h1>
+            <h3>{data?.source}</h3>
+          </>
+        )}
+        <div className="buttons flex gap-1 justify-center">
+          <Button onClick={handleRefresh}>Refresh</Button>
+          <Button>Add to Favorite</Button>
+        </div>
       </div>
     </div>
   );

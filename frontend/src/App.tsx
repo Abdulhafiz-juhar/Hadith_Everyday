@@ -6,9 +6,9 @@ import Navbar from "./components/Navbar";
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex flex-col min-h-screen bg-gray-100 text-[1rem]">
       <Navbar />
-      <main className="p-4 border border-8 flex flex-col flex-1 items-center justify-center">
+      <main className="p-4 border border-8 h-[92vh] grid">
         <Routes>
           <Route path="/" element={<DailyHadithPage />} />
           <Route path="/Favorites" element={<FavoritesPage />} />
