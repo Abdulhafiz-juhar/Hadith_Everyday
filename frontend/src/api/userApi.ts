@@ -7,6 +7,22 @@ export type userReturnType = {
   favorites: Array<string[]>;
 };
 
+export async function loginUserMock(
+  email: string,
+  password: string
+): Promise<string> {
+  const response = await axios.get(
+    "https://689c85fb58a27b18087e858d.mockapi.io/hadithEveryday/users"
+  );
+  const users = response.data;
+  const user = users.find(
+    (u: any) => u.email === email && u.password === password
+  );
+  if (!user) throw new Error("Invalid credentials");
+  return user.id;
+  // later this would return jwt token and user id to be used on getUser
+}
+
 export async function getUser(userId: string): Promise<userReturnType> {
   const user = await axios
     .get(
