@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router";
 import DailyHadithPage from "./pages/DailyHadithPage";
 import FavoritesPage from "./pages/FavoritesPage";
 import Navbar from "./components/Navbar";
+import { LoginForm } from "./components/login-form";
 
 function App() {
   return (
@@ -12,6 +13,12 @@ function App() {
         <Routes>
           <Route path="/" element={<DailyHadithPage />} />
           <Route path="/Favorites" element={<FavoritesPage />} />
+          <Route
+            path="/login"
+            element={
+              <LoginForm className="place-self-center w-[60%] md:max-w-[50%]" />
+            }
+          />
         </Routes>
       </main>
     </div>
