@@ -7,10 +7,10 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function FavoritesPage() {
   const { currentUser, login, logout } = useAuth();
-  const { favorites } = currentUser as user;
+  const { favorites, id } = currentUser as user;
 
   const { data, isFetching, isError } = useQuery({
-    queryKey: ["favoriteHadiths"],
+    queryKey: ["favoriteHadiths", id],
     queryFn: () =>
       Promise.all(
         favorites.map(([editionName, hadithNo]) =>

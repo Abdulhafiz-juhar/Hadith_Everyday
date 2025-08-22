@@ -9,26 +9,51 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { loginUserMock, getUser } from "@/api/userApi";
+import { authUser, getUser } from "@/api/userApi";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-
+import { useAuthenticUser, useUser } from "@/hooks/useUsers";
+//rewrite this mess
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useAuth();
+  const { login: loginContext } = useAuth();
+  const [userId, setUserId] = useState("");
+  const { login, isFetching, isError, error, user } = useAuthenticUser();
 
-  async function handleSubmit(email: string, password: string) {
-    const userId = await loginUserMock(email, password);
-    const user = await getUser(userId);
-    login(user);
+  // const { user, isFetching, isError } = useUser(userId); // ✅ Hook used properly
+  // if (user !== undefined) {
+  //   login(user);
+  // }
+
+  // async function handleSubmit(e) {
+  //   //not displaying on submit the console log meaning not being called properly
+  //   e.preventDefault();
+  //   console.log("hi");
+  //   const userId = await authUser(email, password);
+  //   await console.log(userId);
+  //   // const user = await getUser(userId);
+  //   setUserId(userId);
+  //   await console.log(user);
+  //   console.log("cuser", currentUser);
+  // }
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    let returnedUser = await login({ email, password });
+    if (returnedUser) {
+      console.log("hi", returnedUser);
+      loginContext(returnedUser);
+    }
   }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
+      {isFetching && <p>Loging in...</p>}
+      {isError && <p>{error?.message}</p>}
+      {user && <p>Success</p>}
       <Card>
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
@@ -37,7 +62,7 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={() => handleSubmit}>
+          <form onSubmit={(e) => handleSubmit(e)}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>

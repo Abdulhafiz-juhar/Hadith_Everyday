@@ -7,7 +7,7 @@ export type userReturnType = {
   favorites: Array<string[]>;
 };
 
-export async function loginUserMock(
+export async function authUser(
   email: string,
   password: string
 ): Promise<string> {
@@ -29,5 +29,15 @@ export async function getUser(userId: string): Promise<userReturnType> {
       `https://689c85fb58a27b18087e858d.mockapi.io/hadithEveryday/users/${userId}`
     )
     .then((res) => res.data);
+  return user;
+}
+
+export async function getAuthenticUser(
+  email: string,
+  password: string
+): Promise<userReturnType> {
+  const id = await authUser(email, password);
+  const user = await getUser(id);
+
   return user;
 }

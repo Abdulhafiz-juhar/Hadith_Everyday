@@ -9,9 +9,9 @@ import { useUser } from "./hooks/useUsers";
 import { useAuth } from "./contexts/AuthContext";
 
 function App() {
-  const { user } = useUser("2"); //should come from login and later change this and useUser to fetch based on username and password
-  const { login } = useAuth();
-  login(user ?? null);
+  // const { user } = useUser("2"); //should come from login and later change this and useUser to fetch based on username and password
+  // const { login } = useAuth();
+  // login(user ?? null);
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 text-[1rem]">
