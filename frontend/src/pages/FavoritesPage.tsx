@@ -1,5 +1,6 @@
 import { getHadith } from "@/api/hadithApi";
 import FavoriteHadith from "@/components/FavoriteHadith";
+import { LoginForm } from "@/components/login-form";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { useAuth } from "@/contexts/AuthContext";
 import type { user } from "@/contexts/AuthContext";
@@ -7,47 +8,48 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function FavoritesPage() {
   const { currentUser, login, logout } = useAuth();
-  const { favorites, id } = currentUser as user;
+  if (currentUser) {
+    const { favorites, id } = currentUser;
 
-  const { data, isFetching, isError } = useQuery({
-    queryKey: ["favoriteHadiths", id],
-    queryFn: () =>
-      Promise.all(
-        favorites.map(([editionName, hadithNo]) =>
-          getHadith(editionName, hadithNo)
-        )
-      ),
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    const { data, isFetching, isError } = useQuery({
+      queryKey: ["favoriteHadiths", id],
+      queryFn: () =>
+        Promise.all(
+          favorites.map(([editionName, hadithNo]) =>
+            getHadith(editionName, hadithNo)
+          )
+        ),
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
 
-    //   {
-    //   const favoriteHadiths = favorites.map(async (favorite) => {
-    //   const hadithObject =await getHadith(favorite[0], favorite[1]);
-    //   return hadithObject;
-    // })
-    // return favoriteHadiths;
-    // }
-  });
+      //   {
+      //   const favoriteHadiths = favorites.map(async (favorite) => {
+      //   const hadithObject =await getHadith(favorite[0], favorite[1]);
+      //   return hadithObject;
+      // })
+      // return favoriteHadiths;
+      // }
+    });
 
-  return (
-    <div className="grid gap-2 grid-rows-[auto_1fr]">
-      <h1 className="text-3xl">Your Favorites</h1>
-      <div className="grid gap-2 grid-cols-[repeat(auto-fit,minmax(230px,1fr))] content-start">
-        {isError && <h1>Error loading hadith.</h1>}
-        {isFetching ? (
-          <Spinner />
-        ) : (
-          data!.map((hadithObj) => {
-            return (
-              <FavoriteHadith
-                key={hadithObj.hadith}
-                hadith={hadithObj.hadith}
-                source={hadithObj.source}
-              />
-            );
-          })
-        )}
-        {/* <FavoriteHadith
+    return (
+      <div className="grid gap-2 grid-rows-[auto_1fr]">
+        <h1 className="text-3xl">Your Favorites</h1>
+        <div className="grid gap-2 grid-cols-[repeat(auto-fit,minmax(230px,1fr))] content-start">
+          {isError && <h1>Error loading hadith.</h1>}
+          {isFetching ? (
+            <Spinner />
+          ) : (
+            data!.map((hadithObj) => {
+              return (
+                <FavoriteHadith
+                  key={hadithObj.hadith}
+                  hadith={hadithObj.hadith}
+                  source={hadithObj.source}
+                />
+              );
+            })
+          )}
+          {/* <FavoriteHadith
           hadith="Abu Rifa'a reported:I came to the Prophet (ﷺ) when he was delivering the sermon, and I said: Messenger of Allah, here is a stranger and he wants to learn about this religion and he does not know what this religion is. The Messenger of Allah (ﷺ) looked at me and left his sermon till he came to me, and he was given a chair and I thought that Its legs were made of iron. The Messenger of Allah (ﷺ) sat In it and he began to teach me what Allah had taught him. He then came (to the pulpit) for his sermon and completed it to the end"
           source="- Sahih Muslim, 2025"
         />
@@ -63,7 +65,15 @@ export default function FavoritesPage() {
           hadith={`Narrated Abdullah ibn Sa'd al-Ansari: I asked the Messenger of Allah (ﷺ) as to what makes it necessary to take a bath and about the (prostatic) fluid that flows after taking a bath. He replied: that is called madhi (prostatic fluid). It flows from every male. You should wash your private parts and testicles because of it and perform ablution as you do for prayer`}
           source="- Sunan Abu Dawud, 211"
         /> */}
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <>
+        <h1>Please login first to save or see your favorite hadith</h1>
+        <LoginForm className="place-self-center w-[60%] md:max-w-[50%]" />
+      </>
+    );
+  }
 }

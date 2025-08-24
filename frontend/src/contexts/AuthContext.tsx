@@ -26,16 +26,17 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [currentUser, setCurrentUser] = useState<user | null>({
-    id: "1",
-    name: "Abdulhafiz",
-    email: "Abdulhafiz@gmail.com",
-    favorites: [
-      ["eng-bukhari", "1"],
-      ["eng-bukhari", "11"],
-      ["eng-bukhari", "111"],
-    ],
-  });
+  const [currentUser, setCurrentUser] = useState<user | null>(null);
+  // {
+  //   id: "1",
+  //   name: "Abdulhafiz",
+  //   email: "Abdulhafiz@gmail.com",
+  //   favorites: [
+  //     ["eng-bukhari", "1"],
+  //     ["eng-bukhari", "11"],
+  //     ["eng-bukhari", "111"],
+  //   ],
+  // }
   // change the above initailly to null later, this is just for test
 
   const value = useMemo<AuthContextType>(
