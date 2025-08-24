@@ -13,6 +13,7 @@ import { authUser, getUser } from "@/api/userApi";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAuthenticUser, useUser } from "@/hooks/useUsers";
+import { Navigate, useLocation, useNavigate } from "react-router";
 //rewrite this mess
 export function LoginForm({
   className,
@@ -23,6 +24,8 @@ export function LoginForm({
   const { login: loginContext } = useAuth();
   const [userId, setUserId] = useState("");
   const { login, isFetching, isError, error, user } = useAuthenticUser();
+  const navigate = useNavigate();
+  const location = useLocation().pathname;
 
   // const { user, isFetching, isError } = useUser(userId); // ✅ Hook used properly
   // if (user !== undefined) {
@@ -46,6 +49,9 @@ export function LoginForm({
     if (returnedUser) {
       console.log("hi", returnedUser);
       loginContext(returnedUser);
+      if (location === "/login") {
+        navigate("/");
+      }
     }
   }
 
