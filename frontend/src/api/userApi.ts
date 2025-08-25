@@ -7,6 +7,11 @@ export type userReturnType = {
   favorites: Array<string[]>;
 };
 
+export type createUserType = {
+  email: string;
+  password: string;
+};
+
 export async function authUser(
   email: string,
   password: string
@@ -40,4 +45,16 @@ export async function getAuthenticUser(
   const user = await getUser(id);
 
   return user;
+}
+
+export async function createUser(
+  credential: createUserType
+): Promise<userReturnType> {
+  const newUser = await axios
+    .post<userReturnType>(
+      "https://689c85fb58a27b18087e858d.mockapi.io/hadithEveryday/users",
+      credential
+    )
+    .then((res) => res.data);
+  return newUser;
 }

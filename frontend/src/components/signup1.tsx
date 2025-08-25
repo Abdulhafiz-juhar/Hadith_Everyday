@@ -1,5 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCreateUser } from "@/hooks/useUsers";
+import { useState } from "react";
 
 interface Signup1Props {
   heading?: string;
@@ -27,8 +30,24 @@ const Signup1 = ({
   signupText = "Already a user?",
   signupUrl = "https://shadcnblocks.com",
 }: Signup1Props) => {
+  const { user, signUp, isFetching, isError } = useCreateUser();
+  const { login } = useAuth();
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const user = await signUp({ email, password });
+    console.log(user);
+  }
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   return (
     <section className="bg-muted h-screen">
+      {isFetching && <p>Signing you up....</p>}
+      {isError && <p>Error happened...</p>}
+      {user && <p>Success</p>}
       <div className="flex h-full items-center justify-center">
         {/* Logo */}
         <div className="flex flex-col items-center gap-6 lg:justify-start">
@@ -40,13 +59,17 @@ const Signup1 = ({
               className="h-10 dark:invert"
             />
           </a>
-          <div className="min-w-sm border-muted bg-background flex w-full max-w-sm flex-col items-center gap-y-4 rounded-md border px-6 py-8 shadow-md">
+          <form
+            onSubmit={(e) => handleSubmit(e)}
+            className="min-w-sm border-muted bg-background flex w-full max-w-sm flex-col items-center gap-y-4 rounded-md border px-6 py-8 shadow-md"
+          >
             {heading && <h1 className="text-xl font-semibold">{heading}</h1>}
             <Input
               type="email"
               placeholder="Email"
               className="text-sm"
               required
+              onChange={(e) => setEmail(e.target.value)}
             />
             <Input
               type="password"
@@ -59,11 +82,12 @@ const Signup1 = ({
               placeholder="Confirm Password"
               className="text-sm"
               required
+              onChange={(e) => setPassword(e.target.value)}
             />
             <Button type="submit" className="w-full">
               {buttonText}
             </Button>
-          </div>
+          </form>
           <div className="text-muted-foreground flex justify-center gap-1 text-sm">
             <p>{signupText}</p>
             <a

@@ -1,4 +1,9 @@
-import { getUser, getAuthenticUser } from "@/api/userApi";
+import {
+  getUser,
+  getAuthenticUser,
+  createUser,
+  type createUserType,
+} from "@/api/userApi";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import type { user } from "@/contexts/AuthContext";
 
@@ -45,4 +50,20 @@ export function useAuthenticUser() {
   });
 
   return { login, user, isError, isFetching, error };
+}
+
+export function useCreateUser() {
+  const {
+    mutateAsync: signUp,
+    isError,
+    isPending: isFetching,
+    data: user,
+  } = useMutation({
+    mutationFn: async ({ email, password }: createUserType) => {
+      const user = await createUser({ email, password });
+      return user;
+    },
+  });
+
+  return { signUp, isError, isFetching, user };
 }

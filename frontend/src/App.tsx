@@ -9,12 +9,14 @@ import { LoginForm } from "./components/login-form";
 import { Navbar01 } from "@/components/ui/shadcn-io/navbar-01";
 import { useNavigate } from "react-router";
 import { Signup1 } from "./components/signup1";
+import { useAuth } from "./contexts/AuthContext";
 
 function App() {
   // const { user } = useUser("2"); //should come from login and later change this and useUser to fetch based on username and password
   // const { login } = useAuth();
   // login(user ?? null);
   const navigate = useNavigate();
+  const { currentUser, login, logout } = useAuth();
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 text-[1rem]">
@@ -30,8 +32,10 @@ function App() {
           { href: "/", label: "Home" },
           { href: "/Favorites", label: "Favorites" },
         ]}
-        onSignInClick={() => navigate("/login")}
+        onSignInClick={currentUser ? logout : () => navigate("/login")}
         onCtaClick={() => navigate("/signup")}
+        signInText={currentUser ? "Logout" : "Login"}
+        // ctaText={currentUser ? "" : "Sign Up"}
       />
       <main className="p-4 border border-8 min-h-[92vh] grid">
         <Routes>
