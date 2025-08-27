@@ -5,31 +5,38 @@ import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { useAuth } from "@/contexts/AuthContext";
 import type { user } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
+import { useFavoriteHadiths } from "@/hooks/useHadiths";
 
 export default function FavoritesPage() {
   const { currentUser, login, logout } = useAuth();
+  const { data, isFetching, isError } = useFavoriteHadiths({
+    id: currentUser?.id ?? "",
+    favorites: currentUser?.favorites ?? [],
+  });
+
   if (currentUser) {
-    const { favorites, id } = currentUser;
+    // const { favorites, id } = currentUser;
+    // const { data, isFetching, isError } = useFavoriteHadiths({ id, favorites });
 
-    const { data, isFetching, isError } = useQuery({
-      queryKey: ["favoriteHadiths", id],
-      queryFn: () =>
-        Promise.all(
-          favorites.map(([editionName, hadithNo]) =>
-            getHadith(editionName, hadithNo)
-          )
-        ),
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
+    // const { data, isFetching, isError } = useQuery({
+    //   queryKey: ["favoriteHadiths", id],
+    //   queryFn: () =>
+    //     Promise.all(
+    //       favorites.map(([editionName, hadithNo]) =>
+    //         getHadith(editionName, hadithNo)
+    //       )
+    //     ),
+    //   refetchOnWindowFocus: false,
+    //   refetchOnMount: false,
 
-      //   {
-      //   const favoriteHadiths = favorites.map(async (favorite) => {
-      //   const hadithObject =await getHadith(favorite[0], favorite[1]);
-      //   return hadithObject;
-      // })
-      // return favoriteHadiths;
-      // }
-    });
+    //   //   {
+    //   //   const favoriteHadiths = favorites.map(async (favorite) => {
+    //   //   const hadithObject =await getHadith(favorite[0], favorite[1]);
+    //   //   return hadithObject;
+    //   // })
+    //   // return favoriteHadiths;
+    //   // }
+    // });
 
     return (
       <div className="grid gap-2 grid-rows-[auto_1fr]">

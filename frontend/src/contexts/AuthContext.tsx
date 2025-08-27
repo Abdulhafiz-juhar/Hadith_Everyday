@@ -6,6 +6,7 @@ import {
   type SetStateAction,
   type Dispatch,
 } from "react";
+import { QueryClient } from "@tanstack/react-query";
 
 export type user = {
   id: string;
@@ -27,6 +28,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<user | null>(null);
+  const client = useMemo(() => new QueryClient(), []);
   // {
   //   id: "1",
   //   name: "Abdulhafiz",
@@ -43,7 +45,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     () => ({
       currentUser,
       login: setCurrentUser,
-      logout: () => setCurrentUser(null),
+      logout: () => {
+        setCurrentUser(null);
+        Promise.resolve().then(() => client.removeQueries());
+      },
     }),
     [currentUser]
   );
