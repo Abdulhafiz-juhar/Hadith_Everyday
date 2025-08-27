@@ -35,11 +35,12 @@ export default function FavoritesPage() {
       <div className="grid gap-2 grid-rows-[auto_1fr]">
         <h1 className="text-3xl">Your Favorites</h1>
         <div className="grid gap-2 grid-cols-[repeat(auto-fit,minmax(230px,1fr))] content-start">
-          {isError && <h1>Error loading hadith.</h1>}
           {isFetching ? (
             <Spinner />
-          ) : (
-            data!.map((hadithObj) => {
+          ) : isError ? (
+            <h1>Error loading hadith.</h1>
+          ) : data && data.length > 0 ? (
+            data.map((hadithObj) => {
               return (
                 <FavoriteHadith
                   key={hadithObj.hadith}
@@ -48,7 +49,26 @@ export default function FavoritesPage() {
                 />
               );
             })
+          ) : (
+            <p>You don't have favorites yet</p>
           )}
+
+          {/* {isFetching && <Spinner />}
+          {isError ? (
+            <h1>Error loading hadith.</h1>
+          ) : data && data.length > 0 ? (
+            data.map((hadithObj) => {
+              return (
+                <FavoriteHadith
+                  key={hadithObj.hadith}
+                  hadith={hadithObj.hadith}
+                  source={hadithObj.source}
+                />
+              );
+            })
+          ) : (
+            <p>You don't have favorites yet</p>
+          )} */}
           {/* <FavoriteHadith
           hadith="Abu Rifa'a reported:I came to the Prophet (ﷺ) when he was delivering the sermon, and I said: Messenger of Allah, here is a stranger and he wants to learn about this religion and he does not know what this religion is. The Messenger of Allah (ﷺ) looked at me and left his sermon till he came to me, and he was given a chair and I thought that Its legs were made of iron. The Messenger of Allah (ﷺ) sat In it and he began to teach me what Allah had taught him. He then came (to the pulpit) for his sermon and completed it to the end"
           source="- Sahih Muslim, 2025"
