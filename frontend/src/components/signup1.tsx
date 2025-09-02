@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCreateUser } from "@/hooks/useUsers";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 interface Signup1Props {
   heading?: string;
@@ -18,6 +19,12 @@ interface Signup1Props {
   signupUrl?: string;
 }
 
+type formInput = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
 const Signup1 = ({
   heading = "Signup",
   logo = {
@@ -32,16 +39,24 @@ const Signup1 = ({
 }: Signup1Props) => {
   const { user, signUp, isFetching, isError } = useCreateUser();
   const { login } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<formInput>();
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  const password = watch("password", "");
+
+  async function onSubmit(data: formInput) {
+    const { email, password } = data;
     const user = await signUp({ email, password });
     console.log(user);
   }
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [confirmPassword, setConfirmPassword] = useState("");
 
   return (
     <section className="bg-muted h-screen">
@@ -60,7 +75,7 @@ const Signup1 = ({
             />
           </a>
           <form
-            onSubmit={(e) => handleSubmit(e)}
+            onSubmit={handleSubmit(onSubmit)}
             className="min-w-sm border-muted bg-background flex w-full max-w-sm flex-col items-center gap-y-4 rounded-md border px-6 py-8 shadow-md"
           >
             {heading && <h1 className="text-xl font-semibold">{heading}</h1>}
@@ -68,22 +83,35 @@ const Signup1 = ({
               type="email"
               placeholder="Email"
               className="text-sm"
-              required
-              onChange={(e) => setEmail(e.target.value)}
+              {...register("email", { required: "Email is required" })}
             />
+            {errors.email && <p>{errors.email.message}</p>}
             <Input
               type="password"
               placeholder="Password"
               className="text-sm"
               required
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 4,
+                  message: "password length must be greater than 4",
+                },
+              })}
             />
+            {errors.password && <p>{errors.password.message}</p>}
             <Input
               type="password"
               placeholder="Confirm Password"
               className="text-sm"
               required
-              onChange={(e) => setPassword(e.target.value)}
+              {...register("confirmPassword", {
+                required: "confirm password is required",
+                validate: (value) =>
+                  value === password || "Not same as Password field",
+              })}
             />
+            {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
             <Button type="submit" className="w-full">
               {buttonText}
             </Button>

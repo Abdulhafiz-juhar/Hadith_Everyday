@@ -59,10 +59,8 @@ export function useCreateUser() {
     isPending: isFetching,
     data: user,
   } = useMutation({
-    mutationFn: async ({ email, password }: createUserType) => {
-      const user = await createUser({ email, password });
-      return user;
-    },
+    mutationFn: async ({ email, password }: createUserType) =>
+      createUser({ email, password }),
   });
 
   return { signUp, isError, isFetching, user };
