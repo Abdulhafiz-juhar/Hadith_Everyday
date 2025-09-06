@@ -15,11 +15,20 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useAuthenticUser, useUser } from "@/hooks/useUsers";
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-type loginFormInput = {
-  email: string;
-  password: string;
-};
+// type loginFormInput = {
+//   email: string;
+//   password: string;
+// };
+
+const loginSchema = z.object({
+  email: z.email(),
+  password: z.string().min(5, "Too short buddy"),
+});
+
+type loginSchemaType = z.infer<typeof loginSchema>;
 //rewrite this mess
 export function LoginForm({
   className,
@@ -54,9 +63,11 @@ export function LoginForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<loginFormInput>();
+  } = useForm<loginSchemaType>({
+    resolver: zodResolver(loginSchema),
+  });
 
-  async function onSubmit(data: loginFormInput) {
+  async function onSubmit(data: loginSchemaType) {
     const { email, password } = data;
     let returnedUser = await login({ email, password });
     if (returnedUser) {
@@ -91,13 +102,7 @@ export function LoginForm({
                   placeholder="m@example.com"
                   // value={email}
                   // onChange={(e) => setEmail(e.target.value)}
-                  {...register("email", {
-                    required: "Email is required",
-                    minLength: {
-                      value: 5,
-                      message: "whats this",
-                    },
-                  })}
+                  {...register("email")}
                 />
                 {errors.email && <p>{errors.email.message}</p>}
               </div>
@@ -116,13 +121,7 @@ export function LoginForm({
                   type="password"
                   // value={password}
                   // onChange={(e) => setPassword(e.target.value)}
-                  {...register("password", {
-                    required: "password is required",
-                    minLength: {
-                      value: 6,
-                      message: "Password length must be greater than 5",
-                    },
-                  })}
+                  {...register("password")}
                 />
                 {errors.password && <p>{errors.password.message}</p>}
               </div>
