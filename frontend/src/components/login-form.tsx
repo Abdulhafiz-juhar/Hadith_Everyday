@@ -25,10 +25,10 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
   const { login: loginContext } = useAuth();
-  const [userId, setUserId] = useState("");
+  // const [userId, setUserId] = useState("");
   const { login, isFetching, isError, error, user } = useAuthenticUser();
   const navigate = useNavigate();
   const location = useLocation().pathname;
@@ -56,7 +56,8 @@ export function LoginForm({
     formState: { errors },
   } = useForm<loginFormInput>();
 
-  async function onSubmit() {
+  async function onSubmit(data: loginFormInput) {
+    const { email, password } = data;
     let returnedUser = await login({ email, password });
     if (returnedUser) {
       console.log("hi", returnedUser);
