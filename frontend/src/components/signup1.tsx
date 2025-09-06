@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCreateUser } from "@/hooks/useUsers";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router";
 
 interface Signup1Props {
   heading?: string;
@@ -35,7 +36,7 @@ const Signup1 = ({
   },
   buttonText = "Create Account",
   signupText = "Already a user?",
-  signupUrl = "https://shadcnblocks.com",
+  signupUrl = "/login",
 }: Signup1Props) => {
   const { user, signUp, isFetching, isError } = useCreateUser();
   const { login } = useAuth();
@@ -118,12 +119,12 @@ const Signup1 = ({
           </form>
           <div className="text-muted-foreground flex justify-center gap-1 text-sm">
             <p>{signupText}</p>
-            <a
-              href={signupUrl}
+            <Link
+              to={signupUrl}
               className="text-primary font-medium hover:underline"
             >
               Login
-            </a>
+            </Link>
           </div>
         </div>
       </div>
