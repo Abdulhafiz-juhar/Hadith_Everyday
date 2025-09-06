@@ -14,6 +14,12 @@ import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAuthenticUser, useUser } from "@/hooks/useUsers";
 import { Navigate, useLocation, useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
+
+type loginFormInput = {
+  email: string;
+  password: string;
+};
 //rewrite this mess
 export function LoginForm({
   className,
@@ -43,8 +49,14 @@ export function LoginForm({
   //   await console.log(user);
   //   console.log("cuser", currentUser);
   // }
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<loginFormInput>();
+
+  async function onSubmit() {
     let returnedUser = await login({ email, password });
     if (returnedUser) {
       console.log("hi", returnedUser);
@@ -68,7 +80,7 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={(e) => handleSubmit(e)}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
@@ -76,10 +88,17 @@ export function LoginForm({
                   id="email"
                   type="email"
                   placeholder="m@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
+                  // value={email}
+                  // onChange={(e) => setEmail(e.target.value)}
+                  {...register("email", {
+                    required: "Email is required",
+                    minLength: {
+                      value: 5,
+                      message: "whats this",
+                    },
+                  })}
                 />
+                {errors.email && <p>{errors.email.message}</p>}
               </div>
               <div className="grid gap-3">
                 <div className="flex items-center">
@@ -94,11 +113,19 @@ export function LoginForm({
                 <Input
                   id="password"
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
+                  // value={password}
+                  // onChange={(e) => setPassword(e.target.value)}
+                  {...register("password", {
+                    required: "password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password length must be greater than 5",
+                    },
+                  })}
                 />
+                {errors.password && <p>{errors.password.message}</p>}
               </div>
+
               <div className="flex flex-col gap-3">
                 <Button type="submit" className="w-full">
                   Login

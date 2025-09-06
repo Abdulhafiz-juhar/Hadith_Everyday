@@ -20,7 +20,7 @@ interface Signup1Props {
   signupUrl?: string;
 }
 
-type formInput = {
+type signupFormInput = {
   email: string;
   password: string;
   confirmPassword: string;
@@ -45,11 +45,11 @@ const Signup1 = ({
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<formInput>();
+  } = useForm<signupFormInput>();
 
   const password = watch("password", "");
 
-  async function onSubmit(data: formInput) {
+  async function onSubmit(data: signupFormInput) {
     const { email, password } = data;
     const user = await signUp({ email, password });
     console.log(user);
