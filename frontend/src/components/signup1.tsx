@@ -5,6 +5,8 @@ import { useCreateUser } from "@/hooks/useUsers";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface Signup1Props {
   heading?: string;
@@ -26,6 +28,19 @@ type signupFormInput = {
   confirmPassword: string;
 };
 
+const signupSchema = z
+  .object({
+    email: z.email(),
+    password: z.string().min(4, "Too short buddy"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+
+type signupSchemaType = z.infer<typeof signupSchema>;
+
 const Signup1 = ({
   heading = "Signup",
   logo = {
@@ -45,11 +60,11 @@ const Signup1 = ({
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<signupFormInput>();
+  } = useForm<signupSchemaType>({
+    resolver: zodResolver(signupSchema),
+  });
 
-  const password = watch("password", "");
-
-  async function onSubmit(data: signupFormInput) {
+  async function onSubmit(data: signupSchemaType) {
     const { email, password } = data;
     const user = await signUp({ email, password });
     console.log(user);
@@ -84,33 +99,21 @@ const Signup1 = ({
               type="email"
               placeholder="Email"
               className="text-sm"
-              {...register("email", { required: "Email is required" })}
+              {...register("email")}
             />
             {errors.email && <p>{errors.email.message}</p>}
             <Input
               type="password"
               placeholder="Password"
               className="text-sm"
-              required
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 4,
-                  message: "password length must be greater than 4",
-                },
-              })}
+              {...register("password")}
             />
             {errors.password && <p>{errors.password.message}</p>}
             <Input
               type="password"
               placeholder="Confirm Password"
               className="text-sm"
-              required
-              {...register("confirmPassword", {
-                required: "confirm password is required",
-                validate: (value) =>
-                  value === password || "Not same as Password field",
-              })}
+              {...register("confirmPassword")}
             />
             {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
             <Button type="submit" className="w-full">
