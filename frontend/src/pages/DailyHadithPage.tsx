@@ -1,7 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getRandomHadith } from "@/api/hadithApi";
-import { Spinner } from "@/components/ui/shadcn-io/spinner";
+import { OldHadithCard } from "@/components/oldHadithCard";
 
 type DailyHadithPageProps = {
   hadith: string;
@@ -29,7 +28,7 @@ export default function DailyHadithPage() {
   return (
     <div>
       <h1 className="text-5xl">Home</h1>
-      <div className="border-2 rounded-2xl border-black p-4 grid gap-3 w-full max-w-[800px] place-self-center">
+      {/* <div className="border-2 rounded-2xl border-black p-4 grid gap-3 w-full max-w-[800px] place-self-center">
         {isError && <h1>Error loading hadith.</h1>}
         {isFetching ? (
           <Spinner />
@@ -43,7 +42,13 @@ export default function DailyHadithPage() {
           <Button onClick={handleRefresh}>Refresh</Button>
           <Button>Add to Favorite</Button>
         </div>
-      </div>
+      </div> */}
+      <OldHadithCard
+        isError={isError}
+        isFetching={isFetching}
+        data={data}
+        handleRefresh={handleRefresh}
+      />
     </div>
   );
 }

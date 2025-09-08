@@ -5,7 +5,7 @@ import axios from "axios";
 //     hadithNo: string;
 // }
 
-type hadithReturnType = {
+export type hadithReturnType = {
   hadith: string;
   source: string;
 };
