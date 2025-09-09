@@ -1,4 +1,4 @@
-import { getHadith } from "@/api/hadithApi";
+import { getHadith, getRandomHadith } from "@/api/hadithApi";
 import { useQuery } from "@tanstack/react-query";
 
 type useFavoriteHadithsProps = {
@@ -30,6 +30,17 @@ export function useFavoriteHadiths({ id, favorites }: useFavoriteHadithsProps) {
     // })
     // return favoriteHadiths;
     // }
+  });
+
+  return { data, isFetching, isError };
+}
+
+export function useRandomHadith() {
+  const { data, isFetching, isError } = useQuery({
+    queryKey: ["randomHadith"],
+    queryFn: getRandomHadith,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   return { data, isFetching, isError };

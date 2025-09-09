@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getRandomHadith } from "@/api/hadithApi";
+// import { getRandomHadith } from "@/api/hadithApi";
 import { OldHadithCard } from "@/components/oldHadithCard";
+import { useRandomHadith } from "@/hooks/useHadiths";
 
 type DailyHadithPageProps = {
   hadith: string;
@@ -9,12 +10,13 @@ type DailyHadithPageProps = {
 
 export default function DailyHadithPage() {
   const queryClient = useQueryClient();
-  const { data, isFetching, isError } = useQuery({
-    queryKey: ["randomHadith"],
-    queryFn: getRandomHadith,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
+  const { data, isFetching, isError } = useRandomHadith();
+  // useQuery({
+  //   queryKey: ["randomHadith"],
+  //   queryFn: getRandomHadith,
+  //   refetchOnWindowFocus: false,
+  //   refetchOnMount: false,
+  // });
   function handleRefresh() {
     queryClient.invalidateQueries({
       queryKey: ["randomHadith"],
