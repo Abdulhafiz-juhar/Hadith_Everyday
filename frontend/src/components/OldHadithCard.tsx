@@ -3,15 +3,15 @@ import { Spinner } from "./ui/shadcn-io/spinner";
 import type { hadithReturnType } from "@/api/hadithApi";
 
 type OldHadithCardType = {
-  isError: boolean;
-  isFetching: boolean;
+  isError?: boolean;
+  isFetching?: boolean;
   data: hadithReturnType | undefined;
   handleRefresh: () => void;
 };
 
 export function OldHadithCard({
-  isError,
-  isFetching,
+  isError = false,
+  isFetching = false,
   data,
   handleRefresh,
 }: OldHadithCardType) {
