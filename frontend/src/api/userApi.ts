@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Params } from "react-router";
 
 export type userReturnType = {
   id: string;
@@ -57,4 +58,17 @@ export async function createUser(
     )
     .then((res) => res.data);
   return newUser;
+}
+
+export async function editUser(
+  userId: string,
+  newData: object
+): Promise<userReturnType> {
+  const updatedUser = await axios
+    .put(
+      `https://689c85fb58a27b18087e858d.mockapi.io/hadithEveryday/users/${userId}`,
+      newData
+    )
+    .then((res) => res.data);
+  return updatedUser;
 }

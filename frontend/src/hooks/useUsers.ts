@@ -3,9 +3,10 @@ import {
   getAuthenticUser,
   createUser,
   type createUserType,
+  editUser,
 } from "@/api/userApi";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import type { user } from "@/contexts/AuthContext";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth, type user } from "@/contexts/AuthContext";
 
 export function useUser(id: string) {
   const { data, isFetching, isError } = useQuery<user>({
@@ -64,4 +65,31 @@ export function useCreateUser() {
   });
 
   return { signUp, isError, isFetching, user };
+}
+
+export function useAddToFavorite() {
+  const client = useQueryClient();
+  const { currentUser } = useAuth();
+  const id = currentUser?.id ?? "";
+  const favorites = currentUser?.favorites ?? "";
+  const newFavorites = favorites;
+  const {
+    mutateAsync: addToFavorite,
+    isError,
+    isPending,
+  } = useMutation({
+    mutationFn: async (newData: [string, string]) => {
+      if (newFavorites) {
+        newFavorites.push(newData);
+      }
+      editUser(id, { favorites: newFavorites });
+    },
+    onSuccess: () => {
+      client.invalidateQueries({
+        queryKey: ["favoriteHadiths", id],
+      });
+    },
+  });
+
+  return { addToFavorite, isError, isPending };
 }

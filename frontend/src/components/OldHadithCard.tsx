@@ -7,6 +7,7 @@ type OldHadithCardType = {
   isFetching?: boolean;
   data: hadithReturnType | undefined;
   handleRefresh: () => void;
+  handleAddFavorite: () => void;
 };
 
 export function OldHadithCard({
@@ -14,6 +15,7 @@ export function OldHadithCard({
   isFetching = false,
   data,
   handleRefresh,
+  handleAddFavorite,
 }: OldHadithCardType) {
   return (
     <div className="border-2 rounded-2xl border-black p-4 grid gap-3 w-full max-w-[800px] place-self-center">
@@ -28,7 +30,7 @@ export function OldHadithCard({
       )}
       <div className="buttons flex gap-1 justify-center">
         <Button onClick={handleRefresh}>Refresh</Button>
-        <Button>Add to Favorite</Button>
+        <Button onClick={handleAddFavorite}>Add to Favorite</Button>
       </div>
     </div>
   );

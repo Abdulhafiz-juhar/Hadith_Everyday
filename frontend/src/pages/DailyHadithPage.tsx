@@ -1,7 +1,9 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 // import { getRandomHadith } from "@/api/hadithApi";
 import { OldHadithCard } from "@/components/oldHadithCard";
+import { useAddToFavorite } from "@/hooks/useUsers";
 import { useRandomHadith } from "@/hooks/useHadiths";
+import { HadithCard } from "@/components/hadithCard";
 
 type DailyHadithPageProps = {
   hadith: string;
@@ -11,6 +13,7 @@ type DailyHadithPageProps = {
 export default function DailyHadithPage() {
   const queryClient = useQueryClient();
   const { data, isFetching, isError } = useRandomHadith();
+  const { addToFavorite } = useAddToFavorite();
   // useQuery({
   //   queryKey: ["randomHadith"],
   //   queryFn: getRandomHadith,
@@ -21,6 +24,12 @@ export default function DailyHadithPage() {
     queryClient.invalidateQueries({
       queryKey: ["randomHadith"],
     });
+  }
+
+  function handleAddFavorite() {
+    if (data && "hadithIdentifier" in data) {
+      addToFavorite(data.hadithIdentifier);
+    }
   }
 
   //   const { data, isLoading, isError } = useQuery({
@@ -50,7 +59,11 @@ export default function DailyHadithPage() {
         isFetching={isFetching}
         data={data}
         handleRefresh={handleRefresh}
+        handleAddFavorite={handleAddFavorite}
       />
+      {/* <HadithCard>
+        <p> hey </p>
+      </HadithCard> */}
     </div>
   );
 }

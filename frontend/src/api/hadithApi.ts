@@ -10,6 +10,14 @@ export type hadithReturnType = {
   source: string;
 };
 
+export type HadithIdentifier = {
+  hadithIdentifier: [string, string];
+};
+
+export type hadithWithRefReturnType =
+  | (hadithReturnType & HadithIdentifier)
+  | hadithReturnType;
+
 export async function getHadith(
   editionName: string,
   hadithNo: string
@@ -18,14 +26,31 @@ export async function getHadith(
     `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${editionName}/${hadithNo}.json`
   );
   const hadith = response.data;
-  console.log(hadith);
+  console.log("hiH", response.request.responseURL);
   return {
     hadith: hadith.hadiths[0].text,
     source: `- ${hadith.metadata.name}, ${hadith.hadiths[0].hadithnumber}`,
   };
 }
 
-export async function getRandomHadith(): Promise<hadithReturnType> {
+export async function getHadithWithRef(
+  editionName: string,
+  hadithNo: string
+): Promise<hadithWithRefReturnType> {
+  const response = await axios.get(
+    `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${editionName}/${hadithNo}.json`
+  );
+  const hadith = response.data;
+  // const reqUrl = response.request.responseURL;
+  console.log("hiH", response.request.responseURL);
+  return {
+    hadith: hadith.hadiths[0].text,
+    source: `- ${hadith.metadata.name}, ${hadith.hadiths[0].hadithnumber}`,
+    hadithIdentifier: [editionName, hadithNo],
+  };
+}
+
+export async function getRandomHadith(): Promise<hadithWithRefReturnType> {
   const editions = [
     "eng-bukhari",
     "eng-muslim",
@@ -69,7 +94,7 @@ export async function getRandomHadith(): Promise<hadithReturnType> {
   const randomHadithNo =
     randomHadithNumberGenerator(randomEditionName).toString();
 
-  return getHadith(randomEditionName, randomHadithNo)
+  return getHadithWithRef(randomEditionName, randomHadithNo)
     .then((response) => response)
     .catch((error) => {
       console.error("Error fetching random hadith:", error);

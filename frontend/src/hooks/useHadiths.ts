@@ -1,5 +1,11 @@
-import { getHadith, getRandomHadith } from "@/api/hadithApi";
-import { useQuery } from "@tanstack/react-query";
+import {
+  getHadith,
+  getRandomHadith,
+  type hadithReturnType,
+} from "@/api/hadithApi";
+import { editUser, type userReturnType } from "@/api/userApi";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { id } from "zod/v4/locales";
 
 type useFavoriteHadithsProps = {
   id: string;
@@ -21,7 +27,7 @@ export function useFavoriteHadiths({ id, favorites }: useFavoriteHadithsProps) {
       return favoriteHadithsArray;
     },
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
     enabled: isValid,
     //   {
     //   const favoriteHadiths = favorites.map(async (favorite) => {
